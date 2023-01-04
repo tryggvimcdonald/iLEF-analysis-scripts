@@ -1,4 +1,4 @@
-#setwd("***SET WORKING DIRECTORY HERE***")
+setwd("C:/Users/pierc/OneDrive/Desktop")
 
 #options(warn=-1)
 library(circlize)
@@ -122,11 +122,13 @@ circos.genomicInitialize.new <-
                                         offset = xlim[1]
                                         if(is.null(major.by)){
                                           xlim = get.cell.meta.data("xlim")
-                                          major.by = .default.major.by()
-                                        }
+                                          #major.by = .default.major.by()
+                                          major.by = 2e+07
+                                          }
                                         major.at = seq(xlim[1], xlim[2], by = major.by)
                                         major.at = c(major.at, major.at[length(major.at)] + 
                                                        major.by)
+                                        major.at
                                         if(major.by > 1e+06){
                                           major.tick.labels = paste((major.at - offset)/1e+06, 
                                                                     "MB", sep = "")
@@ -186,7 +188,7 @@ circos.genomicInitialize.new <-
     circos.par(cell.padding = op, points.overflow.warning = ow)
     return(invisible(NULL))
   }
-  
+
 circos.genomicInitialize.new.font <- 
   function (data, sector.names = NULL, major.by = NULL, unit = "", plotType, tickLabelsStartFromZero = TRUE, track.height = 0.05, cexlabel, 
             ...) 
@@ -223,7 +225,9 @@ circos.genomicInitialize.new.font <-
                                         offset = xlim[1]
                                         if(is.null(major.by)){
                                           xlim = get.cell.meta.data("xlim")
-                                          major.by = .default.major.by()
+                                          
+                                          #major.by = .default.major.by()
+                                          major.by = 2e+07
                                         }
                                         major.at = seq(xlim[1], xlim[2], by = major.by)
                                         major.at = c(major.at, major.at[length(major.at)] + 
@@ -309,11 +313,11 @@ get_most_inside_radius = function() {
 	}
 }
 
-data.C.name <- "AnoSag2.1_genome_sizes.csv"
+data.C.name <- "AnoSag2.1_genome_sizes_no_Y.csv"
 data.C <- data.frame(fread(data.C.name),stringsAsFactors=F)
 data.C[,2] <- as.numeric(data.C[,2])
 data.C[,3] <- as.numeric(data.C[,3])
-data.T.file <- c("iLEF_2T1_COMB_WGS_scaffold_coverage_per_1MB_bin_headless_rearranged.txt")
+data.T.file <- c("iLEF_2T1_COMB_WGS_scaffold_coverage_per_1MB_bin_headless_rearranged_no_Y.txt")
 data.T <- lapply(1:length(data.T.file),function(x){
 		  if(!is.null(data.T.file[x])){
 		  data.frame(fread(data.T.file[x]),stringsAsFactors=F)
@@ -333,11 +337,11 @@ data.L <- NULL
 for(i in 1:length(data.T.file)){
   assign(paste("hltdata",i,sep=""),"")
 }
-hltdata1 <- "scaffold_3,15000000,62340000,#7aeb81
-scaffold_6,116420001,140000000,#eb7a7a
-scaffold_7,1,20850000,#8b7aeb
-scaffold_7,91780801,96876404,#8b7aeb
-scaffold_7,98000000,110000000,#eb7a7a"
+hltdata1 <- "scaffold_3,15000000,62340000,#44AA99
+scaffold_6,116420001,140000000,#CC6677
+scaffold_7,1,20850000,#332288
+scaffold_7,91780801,96876404,#332288
+scaffold_7,98000000,110000000,#CC6677"
 hltregion.List <- list()
 if(!is.null(data.T)){
 			for(k in 1:length(data.T)){
@@ -373,7 +377,8 @@ tmp <- matrix(strsplit(get(paste("hltdata",k,sep="")), "\n")[[1]])
 
 ## png("shinyCircos.png", width=2500, height = 2500, res = 300, pointsize = 1/150)
 ## pdf("shinyCircos.pdf", width=1250/72, height=1250/72)
-svg("shinyCircos.svg", width=2500/150, height=2500/150, pointsize = 24)
+## svg("shinyCircos.svg", width=2500/150, height=2500/150, pointsize = 24)
+postscript(file = "CircosPlot.eps", pointsize = 48, horizontal = FALSE, height = 45, width = 36, onefile = FALSE, paper = "special")
 fontSize <- 1.1
 par(mar=c(0.6,0.6,0.6,0.6), cex=fontSize-0.05)
 trackChr <- "track"
@@ -382,13 +387,13 @@ plotTypes <- c("axis","labels")
 #plotTypes <- "axis"
 unitChr <- "unit"
 rotation <- 0.5
-gap.width <- c(1,1,1,1,1,1,1,1,2,4,4,5,6,3,3)
+gap.width <- c(1,1,1,1,1,1,1,1,2,4,4,5,6,3)
 labeltextchr <- 2
 labeltrackheight <- 1.5
 poslabelschr <- "inner"
 heightlabelschr <- 0.12
 marginlabelschr <- 0.01
-colorChr <- c("#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554","#b03554")
+colorChr <- c("#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255","#882255")
 heightChr <- 0.05
 plotcircos(data.C, height=heightChr, color=colorChr, plotTypes=plotTypes, units=unitChr, rotation=rotation, gap.width=gap.width, labeltextchr=labeltextchr, poslabelschr=poslabelschr, heightlabelschr=heightlabelschr, marginlabelschr=marginlabelschr, data.CN=data.CN, labeltrackheight = labeltrackheight)
 takindx <- 1
@@ -402,9 +407,9 @@ data.TT <- data.T[[i]]
 	data.TT$num <- 1:nrow(data.TT)
 data.TTC <- NULL
 coltypeTrack <- 2
-tkcolor <- c("#90dfec")
+tkcolor <- c("#88CCEE")
 data.TT$num <- NULL
-tkbgcol <- c("grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95")
+tkbgcol <- c("grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95","grey95")
 tkmargin <- 0.01
 tkheight <- 0.2
 tklinecoord <- c(0.1875,0.375,0.5625)
@@ -418,7 +423,7 @@ tkrectcol <- 1
 selrectcol <- 1
 rectcols <- c("#EDEDFD","#6969F5","#00008B")
 tktransparency <- 1
-tkcolor <- c("#90DFECFF")
+tkcolor <- c("#88CCEE")
 data.TTT <- data.T[[i]]
 	data.TTT$id <- paste(data.TTT[,1],data.TTT[,2],data.TTT[,3],sep="")
 	data.TTT$num <- 1:nrow(data.TTT)
@@ -539,8 +544,8 @@ if(poslabels[i]=="inner"){
 par(cex = 0.7)
 circos.yaxis(side = "left", sector.index = "scaffold_1", track.index = 3)
 
-par(family = "sans", cex = 0.6)
-legend(x=0, y=0, legend=c("Duplication","Deletion","Pseudo-Autosomal Region"), fill=c("#7aeb81","#eb7a7a","#8b7aeb"), bty="n", cex=2, xjust = 0.5, yjust = 0.5)
+#par(family = "sans", cex = 0.6)
+legend(x=0, y=0, legend=c("Duplication","Deletion","Pseudo-Autosomal Region"), fill=c("#44AA99","#CC6677","#332288"), bty="n", cex=2, xjust = 0.5, yjust = 0.5)
 
 dev.off()
 circos.clear()
